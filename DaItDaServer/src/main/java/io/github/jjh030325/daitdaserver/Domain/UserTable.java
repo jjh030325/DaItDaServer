@@ -21,9 +21,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserTable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 내부 식별자
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, unique = true, length = 30)
     private String name; // 사용자 명
 
     @Column(nullable = false)

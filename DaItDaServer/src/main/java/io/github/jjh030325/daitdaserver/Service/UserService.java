@@ -1,8 +1,16 @@
 package io.github.jjh030325.daitdaserver.Service;
 
+import io.github.jjh030325.daitdaserver.DTO.LoginDTO;
+import io.github.jjh030325.daitdaserver.DTO.RegisterDTO;
+import io.github.jjh030325.daitdaserver.Domain.UserTable;
+import io.github.jjh030325.daitdaserver.Enum.eRole;
 import io.github.jjh030325.daitdaserver.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /*
 * 사용자 관련 핵심 비즈니스 로직을 처리하는 서비스 클래스입니다.
@@ -11,17 +19,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // 회원가입
-    public void UserRegister(String name, String userId, String password) {
-        if(UserNameAndUserIdExists(name, userId)) {
+    public void UserRegister(RegisterDTO registerDTO) {
+        if(UserNameAndUserIdExists(registerDTO.getName(), registerDTO.getUserId())) {
             // 중복
+            throw new IllegalArgumentException("이미 존재하는 사용자 이름 또는 아이디입니다.");
         }else{
+            UserTable userTable = new UserTable();
+            userTable.setName(registerDTO.getName());
+            userTable.setUserId(registerDTO.getUserId());
+            userTable.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+            userTable.setCash(1000000L);
+            userTable.setRole(eRole.USER);
+            userTable.setCreated_at(LocalDateTime.now());
+            userTable.setUpdated_at(LocalDateTime.now());
+            userRepository.save(userTable);
             // 회원 생성 로직
         }
     }
@@ -42,6 +62,22 @@ public class UserService {
     }
 
     // 로그인
+    public String login(LoginDTO loginDTO) {
+        // 1. 사용자 조회
+        UserTable user = userRepository.findByUserId(loginDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        // 2. 비밀번호 비교
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }else
+        {
+            throw new IllegalArgumentException("비밀번호가 일치하지만 성공 로직을 안만들었음ㅋ");
+        }
+
+        // 3. 로그인 성공 로직 (예: 토큰 발급, 세션 설정 등)
+        // ...
+    }
 
     // 회원 정보 확인
 }
