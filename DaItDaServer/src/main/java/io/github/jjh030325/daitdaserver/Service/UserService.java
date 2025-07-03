@@ -1,5 +1,6 @@
 package io.github.jjh030325.daitdaserver.Service;
 
+import io.github.jjh030325.daitdaserver.Config.JwtUtil;
 import io.github.jjh030325.daitdaserver.DTO.LoginDTO;
 import io.github.jjh030325.daitdaserver.DTO.RegisterDTO;
 import io.github.jjh030325.daitdaserver.Domain.UserTable;
@@ -20,11 +21,13 @@ import java.util.Date;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     // 회원가입
@@ -72,11 +75,9 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }else
         {
-            throw new IllegalArgumentException("비밀번호가 일치하지만 성공 로직을 안만들었음ㅋ");
+            // 3. 로그인 성공 로직 (예: 토큰 발급, 세션 설정 등)
+            return jwtUtil.generateToken(user.getUserId(), user.getRole().getKey());
         }
-
-        // 3. 로그인 성공 로직 (예: 토큰 발급, 세션 설정 등)
-        // ...
     }
 
     // 회원 정보 확인

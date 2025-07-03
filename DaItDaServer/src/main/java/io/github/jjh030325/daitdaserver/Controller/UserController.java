@@ -1,6 +1,7 @@
 package io.github.jjh030325.daitdaserver.Controller;
 
 import io.github.jjh030325.daitdaserver.DTO.LoginDTO;
+import io.github.jjh030325.daitdaserver.DTO.LoginResponseDTO;
 import io.github.jjh030325.daitdaserver.DTO.RegisterDTO;
 import io.github.jjh030325.daitdaserver.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,15 +58,13 @@ public class UserController {
     // /user/login POST
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         try {
-            String result = userService.login(loginDTO);
-            return ResponseEntity.ok(result); // 로그인 성공 메시지 또는 JWT 토큰
+            String token = userService.login(loginDTO);
+            return ResponseEntity.ok(new LoginResponseDTO(token));
         } catch (IllegalArgumentException e) {
-            // 로그인 실패: 잘못된 아이디 또는 비밀번호
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (Exception e) {
-            // 서버 에러 등
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("로그인 처리 중 문제가 발생했습니다.");
         }
