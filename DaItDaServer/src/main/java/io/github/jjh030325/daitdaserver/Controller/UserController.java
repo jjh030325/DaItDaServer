@@ -1,13 +1,20 @@
 package io.github.jjh030325.daitdaserver.Controller;
 
+import io.github.jjh030325.daitdaserver.Config.CustomUserDetails;
 import io.github.jjh030325.daitdaserver.DTO.LoginDTO;
 import io.github.jjh030325.daitdaserver.DTO.LoginResponseDTO;
 import io.github.jjh030325.daitdaserver.DTO.RegisterDTO;
+import io.github.jjh030325.daitdaserver.DTO.UserInfoDTO;
+import io.github.jjh030325.daitdaserver.Domain.UserTable;
+import io.github.jjh030325.daitdaserver.Repository.UserRepository;
 import io.github.jjh030325.daitdaserver.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 /*
 * 사용자 인증 및 회원관리와 관련된 HTTP 요청을 처리하는 REST 컨트롤러입니다.
@@ -70,6 +77,13 @@ public class UserController {
         }
     }
 
-    // /user/{id} GET
+    // /user GET
     // 회원 정보 확인
+    @GetMapping()
+    public ResponseEntity<UserInfoDTO> getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long id = userDetails.getId();
+        return userService.getUserInfoById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(()-> ResponseEntity.notFound().build());
+    }
 }

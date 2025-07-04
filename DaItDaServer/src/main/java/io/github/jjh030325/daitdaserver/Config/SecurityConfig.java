@@ -27,6 +27,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // 쿠키 기반 인증 비활성화 (필요없음)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user", "/user/").authenticated() // /user 경로만 인증 필요.
                         .requestMatchers("/user/**").permitAll() // /user/로 시작하는 요청은 인증없이 허용
                         .anyRequest().authenticated()  // 이외 요쳥은 모두 인증 필요
                 )

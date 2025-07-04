@@ -32,11 +32,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7); // "Bearer " 이후
 
             if (jwtUtil.validateToken(token)) {
-                String userId = jwtUtil.getUserId(token);
+                Long id = jwtUtil.getId(token);
                 String role = jwtUtil.getUserRole(token);
 
+                System.out.println("Token valid for user id: " + id + ", role: " + role);
+
                 // 2. UserDetails 객체를 통해 인증 정보 구성
-                var userDetails = userDetailsService.loadUserByUsername(userId);
+                var userDetails = userDetailsService.loadUserById(id);
+
+                System.out.println("Loaded userDetails: " + userDetails.getUsername());
 
                 var authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
@@ -47,6 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // 3. SecurityContext에 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                System.out.println("Token invalid");
             }
         }
         filterChain.doFilter(request, response);

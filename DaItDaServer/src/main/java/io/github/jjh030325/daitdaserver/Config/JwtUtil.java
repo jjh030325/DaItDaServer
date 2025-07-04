@@ -12,9 +12,9 @@ public class JwtUtil {
     private final String SECRET_KEY = "my_very_secure_random_secret_key_1234567890";
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
 
-    public String generateToken(String userId, String role) {
+    public String generateToken(Long id, String role) {
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(String.valueOf(id))
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -24,7 +24,7 @@ public class JwtUtil {
 
     public Claims getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(SECRET_KEY.getBytes())
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -37,8 +37,8 @@ public class JwtUtil {
         }
     }
 
-    public String getUserId(String token) {
-        return getClaims(token).getSubject();
+    public Long getId(String token) {
+        return Long.parseLong(getClaims(token).getSubject());
     }
 
     public String getUserRole(String token) {

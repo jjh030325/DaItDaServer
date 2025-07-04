@@ -1,7 +1,10 @@
 package io.github.jjh030325.daitdaserver.Repository;
 
+import io.github.jjh030325.daitdaserver.DTO.UserInfoDTO;
 import io.github.jjh030325.daitdaserver.Domain.UserTable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -15,4 +18,8 @@ public interface UserRepository extends JpaRepository<UserTable, Long> {
     boolean existsByNameAndUserId(String name, String userId);
 
     Optional<UserTable> findByUserId(String userId);
+
+    @Query("SELECT new io.github.jjh030325.daitdaserver.DTO.UserInfoDTO(u.name, u.cash, u.userId, u.created_at, u.updated_at) " +
+            "FROM UserTable u WHERE u.id = :id")
+    Optional<UserInfoDTO> FindUserInfoById(@Param("id") Long id);
 }

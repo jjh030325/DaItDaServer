@@ -1,17 +1,22 @@
 package io.github.jjh030325.daitdaserver.Service;
 
+import io.github.jjh030325.daitdaserver.Config.CustomUserDetails;
 import io.github.jjh030325.daitdaserver.Config.JwtUtil;
 import io.github.jjh030325.daitdaserver.DTO.LoginDTO;
 import io.github.jjh030325.daitdaserver.DTO.RegisterDTO;
+import io.github.jjh030325.daitdaserver.DTO.UserInfoDTO;
 import io.github.jjh030325.daitdaserver.Domain.UserTable;
 import io.github.jjh030325.daitdaserver.Enum.eRole;
 import io.github.jjh030325.daitdaserver.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 /*
 * 사용자 관련 핵심 비즈니스 로직을 처리하는 서비스 클래스입니다.
@@ -76,9 +81,12 @@ public class UserService {
         }else
         {
             // 3. 로그인 성공 로직 (예: 토큰 발급, 세션 설정 등)
-            return jwtUtil.generateToken(user.getUserId(), user.getRole().getKey());
+            return jwtUtil.generateToken(user.getId(), user.getRole().getKey());
         }
     }
 
     // 회원 정보 확인
+    public Optional<UserInfoDTO> getUserInfoById(Long id) {
+        return userRepository.FindUserInfoById(id);
+    }
 }
