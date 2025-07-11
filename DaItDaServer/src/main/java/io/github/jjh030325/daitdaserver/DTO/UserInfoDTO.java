@@ -1,9 +1,5 @@
 package io.github.jjh030325.daitdaserver.DTO;
 
-import io.github.jjh030325.daitdaserver.Enum.eRole;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 
