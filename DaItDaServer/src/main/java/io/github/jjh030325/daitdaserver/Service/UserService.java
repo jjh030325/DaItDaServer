@@ -1,6 +1,5 @@
 package io.github.jjh030325.daitdaserver.Service;
 
-import io.github.jjh030325.daitdaserver.Config.CustomUserDetails;
 import io.github.jjh030325.daitdaserver.Config.JwtUtil;
 import io.github.jjh030325.daitdaserver.DTO.LoginDTO;
 import io.github.jjh030325.daitdaserver.DTO.RegisterDTO;
@@ -9,13 +8,10 @@ import io.github.jjh030325.daitdaserver.Domain.UserTable;
 import io.github.jjh030325.daitdaserver.Enum.eRole;
 import io.github.jjh030325.daitdaserver.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 /*

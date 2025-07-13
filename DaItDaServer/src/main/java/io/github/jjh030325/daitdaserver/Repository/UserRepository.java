@@ -5,6 +5,7 @@ import io.github.jjh030325.daitdaserver.Domain.UserTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 * UserTable 엔티티에 대한 데이터베이스 접근 인터페이스입니다.
 * Spring Data JPA를 활용하여 기본 CRUD 및 사용자 정의 쿼리를 처리합니다.
 * */
+@Repository
 public interface UserRepository extends JpaRepository<UserTable, Long> {
     boolean existsByName(String name);
     boolean existsByUserId(String userId);
