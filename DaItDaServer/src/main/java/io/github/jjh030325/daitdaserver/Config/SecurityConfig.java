@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user", "/user/").authenticated() // /user 경로만 인증 필요.
                         .requestMatchers("/user/**").permitAll() // /user/로 시작하는 요청은 인증없이 허용
-                        .anyRequest().authenticated()  // 이외 요쳥은 모두 인증 필요
+                        .anyRequest().permitAll()  // 이외 요쳥은 모두 인증 필요 없음 (임시)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 불필요
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
