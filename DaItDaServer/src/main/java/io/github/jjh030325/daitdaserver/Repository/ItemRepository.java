@@ -20,10 +20,14 @@ public interface ItemRepository extends JpaRepository<ItemTable, Long> {
     Optional<ItemTable> findByPrice(Long price);
 
     // 최신순 상품 이름 검색
-    @Query("SELECT i FROM ItemTable i WHERE i.name LIKE CONCAT('%', :name, '%') ORDER BY i.updated_at DESC")
+    @Query(value = "SELECT * FROM item_table WHERE MATCH(name) AGAINST(:name IN NATURAL LANGUAGE MODE) ORDER BY updated_at DESC",
+            countQuery = "SELECT COUNT(*) FROM item_table WHERE MATCH(name) AGAINST(:name IN NATURAL LANGUAGE MODE)",
+            nativeQuery = true)
     Page<ItemTable> ItemNameSearch(@Param("name") String name, Pageable pageable);
 
     // 최신순 상품 이름 + 타입 검색
-    @Query("SELECT i FROM ItemTable i WHERE i.name LIKE CONCAT('%', :name, '%') AND i.type = :type ORDER BY i.updated_at DESC ")
+    @Query(value = "SELECT * FROM item_table WHERE MATCH(name) AGAINST(:name IN NATURAL LANGUAGE MODE) AND type = :type ORDER BY updated_at DESC",
+            countQuery = "SELECT COUNT(*) FROM item_table WHERE MATCH(name) AGAINST(:name IN NATURAL LANGUAGE MODE) AND type = :type",
+            nativeQuery = true)
     Page<ItemTable> ItemNameSearchWithType(@Param("name") String name, @Param("type") eType type , Pageable pageable);
 }
