@@ -30,6 +30,9 @@ public class OrderHistoryTable {
     private Long item_id; // 상품 아이디
 
     @Column(nullable = false)
+    private Long price; // 상품 가격
+
+    @Column(nullable = false)
     private Integer quantity; // 구매 상품 개수
 
     @Column(nullable = false)

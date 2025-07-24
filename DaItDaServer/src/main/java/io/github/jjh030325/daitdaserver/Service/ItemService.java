@@ -38,4 +38,10 @@ public class ItemService {
         Page<ItemTable> resultPage = itemRepository.ItemNameSearchWithType(input, type, pageable);
         return ResponseEntity.ok(resultPage);
     }
+
+    // id로 상품 테이블 리턴
+    public ItemTable getItemById(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("상품 없음"));
+    }
 }

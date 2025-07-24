@@ -85,4 +85,17 @@ public class UserService {
     public Optional<UserInfoDTO> getUserInfoById(Long id) {
         return userRepository.FindUserInfoById(id);
     }
+
+    // 회원 정보 확인
+    public UserTable getUserInfoByUserId(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("유저 없음"));
+    }
+
+    // 결제
+    public void decreaseBalance(Long userId, Long amount){
+        UserTable user = getUserInfoByUserId(userId);
+        user.decreaseBalance(amount);
+        userRepository.save(user);
+    }
 }

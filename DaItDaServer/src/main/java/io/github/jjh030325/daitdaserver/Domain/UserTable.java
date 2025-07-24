@@ -45,4 +45,13 @@ public class UserTable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private eRole role; // USER, ADMIN, MANAGER 권한 구분용
+
+    // 결제가 가능하다면 결제
+    public void decreaseBalance(Long amount) {
+        if (this.cash < amount) {
+            throw new RuntimeException("잔액 부족");
+        }else{
+            this.cash -= amount;
+        }
+    }
 }
