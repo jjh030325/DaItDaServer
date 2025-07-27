@@ -3,6 +3,10 @@ package io.github.jjh030325.daitdaserver.Service;
 import io.github.jjh030325.daitdaserver.Domain.OrderHistoryTable;
 import io.github.jjh030325.daitdaserver.Repository.OrderHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,5 +34,12 @@ public class OrderHistoryService {
         order.setTotal_price(price * quantity);
         order.setPurchased_at(LocalDateTime.now());
         orderHistoryRepository.save(order);
+    }
+
+    // 주문 내역 조회
+    public ResponseEntity<Page<OrderHistoryTable>> myOrderHistory(Long id, int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<OrderHistoryTable> resultPage = orderHistoryRepository.OrderHistorySearchWithId(id, pageable);
+        return ResponseEntity.ok(resultPage);
     }
 }

@@ -54,4 +54,9 @@ public class UserTable {
             this.cash -= amount;
         }
     }
+
+    // 해당 사용자에게 캐쉬 입금
+    public void increaseBalance(Long amount) {
+        this.cash += amount;
+    }
 }

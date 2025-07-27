@@ -28,7 +28,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // 쿠키 기반 인증 비활성화 (필요없음)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user", "/user/").authenticated() // /user 경로 인증 필요.
+                        .requestMatchers("/payment/gift").hasRole("MANAGER") // 특정 금액 추가는 최고 관리자만 가능.
                         .requestMatchers("/payment", "/payment/**").authenticated() // /결제 시스템 경로 인증 필요.
+                        .requestMatchers("/orderHistory/**").authenticated() // 주문 내역 확인시 인증 필요.
                         .requestMatchers("/user/**").permitAll() // /user/로 시작하는 요청은 인증없이 허용
                         .anyRequest().permitAll()  // 이외 요쳥은 모두 인증 필요 없음 (임시)
                 )

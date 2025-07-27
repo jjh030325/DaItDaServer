@@ -29,5 +29,5 @@ public interface ItemRepository extends JpaRepository<ItemTable, Long> {
     @Query(value = "SELECT * FROM item_table WHERE MATCH(name) AGAINST(:name IN NATURAL LANGUAGE MODE) AND type = :type ORDER BY updated_at DESC",
             countQuery = "SELECT COUNT(*) FROM item_table WHERE MATCH(name) AGAINST(:name IN NATURAL LANGUAGE MODE) AND type = :type",
             nativeQuery = true)
-    Page<ItemTable> ItemNameSearchWithType(@Param("name") String name, @Param("type") eType type , Pageable pageable);
+    Page<ItemTable> ItemNameSearchWithType(@Param("name") String name, @Param("type") eType type, Pageable pageable);
 }

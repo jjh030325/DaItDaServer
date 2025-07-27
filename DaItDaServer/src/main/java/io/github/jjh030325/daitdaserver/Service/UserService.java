@@ -98,4 +98,17 @@ public class UserService {
         user.decreaseBalance(amount);
         userRepository.save(user);
     }
+
+    // 캐쉬 입금 (관리자 권한)
+    public void increaseBalance(Long userId, Long amount){
+        UserTable user = getUserInfoByUserId(userId);
+        user.increaseBalance(amount);
+        userRepository.save(user);
+    }
+
+    // 자신의 잔고 확인
+    public Long getBalance(Long userId){
+        UserTable user = getUserInfoByUserId(userId);
+        return user.getCash();
+    }
 }

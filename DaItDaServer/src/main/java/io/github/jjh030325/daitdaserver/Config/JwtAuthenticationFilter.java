@@ -7,12 +7,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,36 +27,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // 1. Authorization 헤더 추출
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // "Bearer " 이후
+            String token = authHeader.substring(7);
 
             if (jwtUtil.validateToken(token)) {
                 Long id = jwtUtil.getId(token);
-                String role = jwtUtil.getUserRole(token);
+                String role = jwtUtil.getUserRole(token);  // ex: "ROLE_MANAGER"
 
                 System.out.println("Token valid for user id: " + id + ", role: " + role);
 
-                // 2. UserDetails 객체를 통해 인증 정보 구성
                 var userDetails = userDetailsService.loadUserById(id);
 
-                System.out.println("Loaded userDetails: " + userDetails.getUsername());
+                // JWT에서 가져온 권한으로 직접 GrantedAuthority 생성
+                var authorities = List.of(new SimpleGrantedAuthority(role));
 
                 var authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
+                        userDetails, null, authorities
                 );
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                // 3. SecurityContext에 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 System.out.println("Token invalid");
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }

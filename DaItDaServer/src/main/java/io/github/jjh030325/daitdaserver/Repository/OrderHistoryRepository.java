@@ -1,7 +1,11 @@
 package io.github.jjh030325.daitdaserver.Repository;
 
 import io.github.jjh030325.daitdaserver.Domain.OrderHistoryTable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /*
@@ -10,4 +14,6 @@ import org.springframework.stereotype.Repository;
 * */
 @Repository
 public interface OrderHistoryRepository extends JpaRepository<OrderHistoryTable, Long> {
+    @Query("SELECT o FROM OrderHistoryTable o WHERE o.buyer_id = :id ORDER BY o.purchased_at DESC")
+    Page<OrderHistoryTable> OrderHistorySearchWithId(@Param("id") Long id, Pageable pageable);
 }

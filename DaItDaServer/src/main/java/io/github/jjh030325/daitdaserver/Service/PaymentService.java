@@ -22,11 +22,24 @@ public class PaymentService {
         this.orderHistoryService = orderHistoryService;
     }
 
+    // 상품 구매 서비스
     @Transactional
     public String purchaseItem(Long userId, Long itemId, Integer quantity) {
         ItemTable item = itemService.getItemById(itemId);
         userService.decreaseBalance(userId, item.getPrice());
         orderHistoryService.saveOrder(userId, itemId, item.getPrice(), quantity);
         return "구매 성공";
+    }
+
+    // 특정 유저에게 관리자 권한으로 입금
+    @Transactional
+    public String cashPlus(Long userId, Long price) {
+        userService.increaseBalance(userId, price);
+        return "입금 완료";
+    }
+
+    // 자신의 잔고 확인
+    public Long myMoney(Long userId) {
+        return userService.getBalance(userId);
     }
 }
