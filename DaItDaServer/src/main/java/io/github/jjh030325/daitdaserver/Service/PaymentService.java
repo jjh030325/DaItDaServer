@@ -26,7 +26,7 @@ public class PaymentService {
     @Transactional
     public String purchaseItem(Long userId, Long itemId, Integer quantity) {
         ItemTable item = itemService.getItemById(itemId);
-        userService.decreaseBalance(userId, item.getPrice());
+        userService.decreaseBalance(userId, item.getPrice() * quantity);
         orderHistoryService.saveOrder(userId, itemId, item.getPrice(), quantity);
         return "구매 성공";
     }
