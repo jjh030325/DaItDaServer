@@ -28,11 +28,18 @@ public class ItemController {
             @PathVariable String name,
             @RequestParam(required = false) eType type,
             @RequestParam (defaultValue = "0") int page) {
-        if(type == null)
-        {
-            return itemService.SearchItem(name, page);
-        }else {
-            return itemService.SearchItemWithType(name, type, page);
+        // 캐싱 적용
+        if(page==0) {
+            return ResponseEntity.ok(itemService.getCachedSearchItem(name, type, page));
+        }
+        // 캐싱 미적용
+        else {
+            if(type == null)
+            {
+                return itemService.SearchItem(name, page);
+            }else {
+                return itemService.SearchItemWithType(name, type, page);
+            }
         }
     }
 }

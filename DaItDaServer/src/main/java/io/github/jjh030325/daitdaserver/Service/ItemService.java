@@ -4,13 +4,12 @@ import io.github.jjh030325.daitdaserver.Domain.ItemTable;
 import io.github.jjh030325.daitdaserver.Enum.eType;
 import io.github.jjh030325.daitdaserver.Repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 /*
 * 상품 관련 핵심 비즈니스 로직을 처리하는 서비스 클래스입니다.
@@ -43,5 +42,16 @@ public class ItemService {
     public ItemTable getItemById(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("상품 없음"));
+    }
+
+    @Cacheable(value = "items", key = "#input + ':' + #type + ':' + #page")
+    public Page<ItemTable> getCachedSearchItem(String input, eType type, int page) {
+        if (type == null) {
+            Pageable pageable = PageRequest.of(page, 20);
+            return itemRepository.ItemNameSearch(input, pageable);
+        } else {
+            Pageable pageable = PageRequest.of(page, 20);
+            return itemRepository.ItemNameSearchWithType(input, type, pageable);
+        }
     }
 }
